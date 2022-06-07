@@ -427,7 +427,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ActionMenuApi\ActionMenuApi.csproj">
-      <Project>{19d1cb2d-4785-4cdb-9718-50b591b895a8}</Project>
+      <Project>{01fcd29c-e692-4be2-b0b0-6000229a531d}</Project>
       <Name>ActionMenuApi</Name>
     </ProjectReference>
   </ItemGroup>
