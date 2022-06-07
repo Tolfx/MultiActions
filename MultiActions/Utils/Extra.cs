@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VRC;
 using VRC.Core;
+using UnityEngine.XR;
+
 
 namespace MultiActions.Utils
 {
@@ -31,6 +33,11 @@ namespace MultiActions.Utils
         {
             if (HighlightsFX.prop_HighlightsFX_0 == null) return;
             HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(render, state);
+        }
+
+        public static bool isInXR()
+        {
+            return XRDevice.isPresent;
         }
     }
 }

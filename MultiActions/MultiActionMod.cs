@@ -103,7 +103,13 @@ namespace MultiActions
                             VRCUiManagerEx.Instance.ShowUi();
                             VRCUiManagerEx.Instance.ShowScreen(QuickMenu.MainMenuScreenIndex.SafetyMenu);
                         }, null, !MultiActionSettings.IsModEnabled());
-                    }, null, !MultiActionSettings.IsModEnabled());
+                    }, 
+                    null,
+                    // When using this custom submenu and we open a setting
+                    // We the user who is in XRDevice will be stuck
+                    // So just ensuring we are not in XRDevice
+                    (!MultiActionSettings.IsModEnabled() || !Utils.Extra.isInXR()));
+
                 }, null, !MultiActionSettings.IsModEnabled());
         }
     }
