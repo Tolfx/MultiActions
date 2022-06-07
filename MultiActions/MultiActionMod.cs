@@ -13,13 +13,17 @@ using UnityEngine.XR;
 using ReMod.Core.VRChat;
 using VRC;
 using UnityEngine;
+using UnityEngine.UI;
 using MultiActions.Utils;
+using UIExpansionKit.API;
+
 
 namespace MultiActions
 {
     public class MultiActionsMod : MelonMod
     {
 
+        TeleportHandler teleportHandler = new TeleportHandler();
         public override void OnApplicationStart()
         {
             MultiActionSettings.RegisterSettings();
@@ -33,6 +37,9 @@ namespace MultiActions
                 MultiActionSettings.ModName,
                 () =>
                 {
+                    /// <summary>
+                    /// Taking out/in camera button
+                    /// </summary>
                     CustomSubMenu.AddButton(
                         Utils.Camera.isCameraOn ? "Take in camera" : "Take out camera",
                         Utils.Camera.CameraToggle, 
@@ -40,6 +47,9 @@ namespace MultiActions
                         !MultiActionSettings.IsModEnabled()
                     );
 
+                    /// <summary>
+                    /// Respawns our local player
+                    /// </summary>
                     CustomSubMenu.AddButton(
                         "Respawn", 
                         Utils.Players.respawnLocalPlayer, 
@@ -47,6 +57,9 @@ namespace MultiActions
                         (!MultiActionSettings.IsModEnabled() || !MultiActionSettings.respawnButton.Value)
                     );
 
+                    /// <summary>
+                    /// Quits game
+                    /// </summary>
                     CustomSubMenu.AddSubMenu(
                         "Quit game", 
                         () =>
@@ -61,6 +74,9 @@ namespace MultiActions
                         (!MultiActionSettings.IsModEnabled() || !MultiActionSettings.quitButton.Value)
                     );
 
+                    /// <summary>
+                    /// Teleports to player
+                    /// </summary>
                     CustomSubMenu.AddSubMenu("Teleport to", () =>
                     {
                         var allPlayers = Utils.Players.getAllPlayers();
@@ -70,13 +86,12 @@ namespace MultiActions
                                 player.field_Private_APIUser_0.displayName,
                                 () =>
                                 {
-                                    CustomSubMenu.AddButton($"TP to: {player.field_Private_APIUser_0.displayName}",
-                                    () =>
-                                    {
-                                        var localPlayer = Utils.Players.getLocalPlayer().GetPlayerApi();
-                                        if (localPlayer == null) return;
-                                        localPlayer.TeleportTo(player.transform.position, localPlayer.gameObject.transform.rotation);
-                                    }, null, !MultiActionSettings.IsModEnabled());
+                                    CustomSubMenu.AddButton(
+                                        $"TP to: {player.field_Private_APIUser_0.displayName}",
+                                        () => teleportHandler.TeleportTo(player),
+                                        null, 
+                                        !MultiActionSettings.IsModEnabled()
+                                    );
                                 },
                                 null,
                                 !MultiActionSettings.IsModEnabled()
@@ -84,6 +99,9 @@ namespace MultiActions
                         }
                     }, null, !MultiActionSettings.IsModEnabled());
 
+                    /// <summary>
+                    /// Opens different menus for local player
+                    /// </summary>
                     CustomSubMenu.AddSubMenu("Open", () => 
                     {
                         CustomSubMenu.AddButton("Avatars", () =>
@@ -110,7 +128,113 @@ namespace MultiActions
                     // So just ensuring we are not in XRDevice
                     (!MultiActionSettings.IsModEnabled() || !Utils.Extra.isInXR()));
 
+                    /// <summary>
+                    /// Teleporting menu
+                    /// </summary>
+                    CustomSubMenu.AddSubMenu("Teleporting", () =>
+                    {
+
+                        CustomSubMenu.AddButton("Save position", () =>
+                        {
+                            var player = Utils.Players.getLocalPlayer();
+                            if (player == null) return;
+
+                            var controller = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<GamelikeInputController>();
+                            controller.enabled = false;
+                            
+                            BuiltinUiUtils.ShowInputPopup(
+                                "Save Point Name", 
+                                "", 
+                                InputField.InputType.Standard, 
+                                false, 
+                                "Save", 
+                                (msg, _, _2) =>
+                                {
+                                    controller.enabled = true;
+                                    teleportHandler.AddSavePoint(msg, player.transform.position);
+                                },
+                                () => controller.enabled = true
+                            );
+                        }, null, !MultiActionSettings.IsModEnabled());
+
+                        CustomSubMenu.AddSubMenu("Saved", () =>
+                        {
+                            CustomSubMenu.AddButton("Clear all", () =>
+                            {
+                                teleportHandler.ClearAllSavePoints();
+                            }, null, !MultiActionSettings.IsModEnabled());
+
+                            // Display all of our saves
+                            var points = teleportHandler.GetSavePoints();
+                            foreach(var point in points)
+                            {
+                                var p = teleportHandler.GetSavePoint(point);
+                                if (p == null) return;
+                                CustomSubMenu.AddSubMenu(point, () =>
+                                {
+                                    CustomSubMenu.AddButton("Delete", () =>
+                                    {
+                                        teleportHandler.RemoveSavePoint(point);
+                                    });
+                                    CustomSubMenu.AddButton("Teleport", () =>
+                                    {
+                                        // Teleport player to p
+                                        var player = Utils.Players.getLocalPlayer();
+                                        if (player == null) return;
+                                        teleportHandler.TeleportTo(p);
+                                    }, null, !MultiActionSettings.IsModEnabled());
+                                });
+                            }
+                        });
+
+
+                    }, null, !MultiActionSettings.IsModEnabled());
+
+
                 }, null, !MultiActionSettings.IsModEnabled());
+        }
+    }
+
+    public class TeleportHandler
+    {
+        public Dictionary<string, Vector3> SavePoints = new Dictionary<string, Vector3>();
+
+        public void ClearAllSavePoints()
+        {
+            SavePoints.Clear();
+        }
+
+        public void RemoveSavePoint(string name)
+        {
+            SavePoints.Remove(name);
+        }
+
+        public void AddSavePoint(string name, Vector3 location)
+        {
+            SavePoints.Add(name, location);
+        }
+
+        public List<string> GetSavePoints()
+        {
+            return SavePoints.Keys.ToList();
+        }
+        public Vector3 GetSavePoint(string name)
+        {
+            return SavePoints[name];
+        }
+
+        public void TeleportTo(Vector3 location)
+        {
+            var player = Utils.Players.getLocalPlayer().GetPlayerApi();
+            if (player == null) return;
+            player.TeleportTo(location, player.gameObject.transform.rotation);
+        }
+
+        public void TeleportTo(Player p)
+        {
+            var player = Utils.Players.getLocalPlayer().GetPlayerApi();
+            if (player == null) return;
+            player.TeleportTo(p.transform.position, player.gameObject.transform.rotation);
         }
     }
 }
