@@ -104,7 +104,7 @@ namespace MultiActions
                             VRCUiManagerEx.Instance.ShowScreen(QuickMenu.MainMenuScreenIndex.SafetyMenu);
                         }, null, !MultiActionSettings.IsModEnabled());
                     }, null, !MultiActionSettings.IsModEnabled());
-                });
+                }, null, !MultiActionSettings.IsModEnabled());
         }
     }
 }
