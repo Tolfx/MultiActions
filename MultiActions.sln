@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionMenuApi", "ActionMenu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReMod.Core", "ReMod.Core\ReMod.Core.csproj", "{C87FE758-ACB9-4FA2-AF6F-10AA9AA0023C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIExpansionKit", "UIExpansionKit\UIExpansionKit.csproj", "{237CFA5D-3138-4E7D-8E51-4FCAE15E4E1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{C87FE758-ACB9-4FA2-AF6F-10AA9AA0023C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C87FE758-ACB9-4FA2-AF6F-10AA9AA0023C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C87FE758-ACB9-4FA2-AF6F-10AA9AA0023C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{237CFA5D-3138-4E7D-8E51-4FCAE15E4E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{237CFA5D-3138-4E7D-8E51-4FCAE15E4E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{237CFA5D-3138-4E7D-8E51-4FCAE15E4E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{237CFA5D-3138-4E7D-8E51-4FCAE15E4E1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +42,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{01FCD29C-E692-4BE2-B0B0-6000229A531D} = {88067B69-507A-4D45-A2C2-275EFBE60871}
 		{C87FE758-ACB9-4FA2-AF6F-10AA9AA0023C} = {88067B69-507A-4D45-A2C2-275EFBE60871}
+		{237CFA5D-3138-4E7D-8E51-4FCAE15E4E1A} = {88067B69-507A-4D45-A2C2-275EFBE60871}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A48503F4-6CBB-4E8D-965C-DC27F0CFC660}

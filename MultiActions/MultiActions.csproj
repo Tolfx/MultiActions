@@ -431,6 +431,10 @@
       <Project>{c87fe758-acb9-4fa2-af6f-10aa9aa0023c}</Project>
       <Name>ReMod.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UIExpansionKit\UIExpansionKit.csproj">
+      <Project>{237cfa5d-3138-4e7d-8e51-4fcae15e4e1a}</Project>
+      <Name>UIExpansionKit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

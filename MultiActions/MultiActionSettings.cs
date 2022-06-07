@@ -4,7 +4,7 @@ namespace MultiActions
 {
     internal static class MultiActionSettings
     {
-        internal static string ModName = "Multi Actions";
+        internal static string ModName = "MultiActions";
         internal static string ModVersion = "1.0.1";
         internal static MelonPreferences_Entry<bool> enable;
         internal static MelonPreferences_Entry<bool> quitButton;
