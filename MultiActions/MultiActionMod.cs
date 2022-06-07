@@ -11,12 +11,12 @@ using VRC.Core;
 using VRC.UI;
 using UnityEngine.XR;
 using ReMod.Core.VRChat;
+using ReMod.Core.UI.QuickMenu;
 using VRC;
 using UnityEngine;
 using UnityEngine.UI;
 using MultiActions.Utils;
 using UIExpansionKit.API;
-
 
 namespace MultiActions
 {
@@ -24,10 +24,23 @@ namespace MultiActions
     {
 
         TeleportHandler teleportHandler = new TeleportHandler();
+        private int _scenesLoaded = 0;
         public override void OnApplicationStart()
         {
             MultiActionSettings.RegisterSettings();
             SetupActionsButtons();
+        }
+
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        {
+            if (_scenesLoaded <= 2)
+            {
+                _scenesLoaded++;
+                if (_scenesLoaded == 2)
+                {
+                    MelonCoroutines.Start(CreateTabMenu());
+                }
+            }
         }
 
         private void SetupActionsButtons()
@@ -141,7 +154,6 @@ namespace MultiActions
 
                             var controller = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<GamelikeInputController>();
                             controller.enabled = false;
-                            
                             BuiltinUiUtils.ShowInputPopup(
                                 "Save Point Name", 
                                 "", 
@@ -152,6 +164,11 @@ namespace MultiActions
                                 {
                                     controller.enabled = true;
                                     teleportHandler.AddSavePoint(msg, player.transform.position);
+                                    SavedPointsTeleport.AddItem(
+                                        msg, 
+                                        null,
+                                        () => teleportHandler.TeleportTo(teleportHandler.GetSavePoint(msg))
+                                    );
                                 },
                                 () => controller.enabled = true
                             );
@@ -192,6 +209,19 @@ namespace MultiActions
 
 
                 }, null, !MultiActionSettings.IsModEnabled());
+        }
+
+        private static ReRadioTogglePage SavedPointsTeleport;
+        public IEnumerator<string> CreateTabMenu()
+        {
+            while (GameObject.Find("UserInterface").GetComponentInChildren<VRC.UI.Elements.QuickMenu>(true) == null)
+                yield return null;
+
+            var TeleportsTab = new ReCategoryPage("Teleports", true);
+            ReTabButton.Create("Teleports", "Open Teleports", "Teleports", null);
+            var TeleportsConfig = TeleportsTab.AddCategory("Teleports Config");
+            SavedPointsTeleport = new ReRadioTogglePage("Saved points");
+            TeleportsConfig.AddButton("Saved points", "Open to see all saved points", SavedPointsTeleport.Open);
         }
     }
 
