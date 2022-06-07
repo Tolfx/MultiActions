@@ -17,4 +17,4 @@ It servers as multiple actions for quick and easy use. And currently contains th
 * [Camera Toggle / PennyBunny](https://github.com/PennyBunny/VRCMods/tree/main/ShortCuts)
 
 # Download and use
-If you want to use this mod you can download it [here](https://github.com/Tolfx/MultiActions/releases/latest/download/MultiActions.dll), you need to for the moment include ReMod core in the managed folder because using it as reference, but will be changed *probably* 
+If you want to use this mod you can download it [here](https://github.com/Tolfx/MultiActions/releases/latest/download/MultiActions.dll). 
