@@ -99,9 +99,6 @@
     <Reference Include="MelonLoader">
       <HintPath>..\..\..\..\Programs\Steam\steamapps\common\VRChat\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
-    <Reference Include="ReMod.Core">
-      <HintPath>..\Lib\ReMod.Core.dll</HintPath>
-    </Reference>
     <Reference Include="ReModCE.Loader">
       <HintPath>..\Lib\ReModCE.Loader.dll</HintPath>
     </Reference>
@@ -429,6 +426,10 @@
     <ProjectReference Include="..\ActionMenuApi\ActionMenuApi.csproj">
       <Project>{01fcd29c-e692-4be2-b0b0-6000229a531d}</Project>
       <Name>ActionMenuApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReMod.Core\ReMod.Core.csproj">
+      <Project>{c87fe758-acb9-4fa2-af6f-10aa9aa0023c}</Project>
+      <Name>ReMod.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
