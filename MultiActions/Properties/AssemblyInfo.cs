@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using MelonLoader;
 using MultiActions;
 
-[assembly: MelonInfo(typeof(MultiActionsMod), "Multi Actions", "1.0.0", "Tolfx")]
+[assembly: MelonInfo(typeof(MultiActionsMod), "Multi Actions", "1.0.1", "Tolfx", "https://github.com/Tolfx/MultiActions/releases/latest/download/MultiActions.dll")]
 [assembly: MelonGame("VRChat", "VRChat")]
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
