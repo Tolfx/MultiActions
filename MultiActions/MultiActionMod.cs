@@ -73,9 +73,9 @@ namespace MultiActions
                                     CustomSubMenu.AddButton($"TP to: {player.field_Private_APIUser_0.displayName}",
                                     () =>
                                     {
-                                        var localPlayer = Utils.Players.getLocalPlayer();
+                                        var localPlayer = Utils.Players.getLocalPlayer().GetPlayerApi();
                                         if (localPlayer == null) return;
-                                        localPlayer.field_Private_VRCPlayerApi_0.TeleportTo(player.transform.position, player.transform.rotation);
+                                        localPlayer.TeleportTo(player.transform.position, localPlayer.gameObject.transform.rotation);
                                     }, null, !MultiActionSettings.IsModEnabled());
                                 },
                                 null,
