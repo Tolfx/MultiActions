@@ -1,15 +1,15 @@
 # MultiActions Mod
 This is a mod for more personal use of what I would like to have in `VRChat`.
 
-It servers as multiple actions for quick and easy use. And currently contains the following:
+This mod adds the following things to the action menu:
 * Teleport to players
-* Teleporting
+* Teleporting:
   * Save points and name them
-  * Find them in menu and teleport 
+  * Find them in menu and teleport
 * Quit game
 * Toggle camera
 * Respawn
-* Open
+* Open:
   * Avatars
   * Settings
   * Safety
@@ -17,6 +17,7 @@ It servers as multiple actions for quick and easy use. And currently contains th
 # References and *help*
 * [ActionMenuApi](https://github.com/gompoc/VRChatMods/tree/master/ActionMenuApi)
 * [ReMod](https://github.com/RequiDev/ReMod.Core)
+* [UIExpansionKit](https://github.com/knah/VRCMods/tree/master/UIExpansionKit)
 * [Camera Toggle / PennyBunny](https://github.com/PennyBunny/VRCMods/tree/main/ShortCuts)
 
 # Download and use
