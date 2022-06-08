@@ -125,31 +125,6 @@ namespace MultiActions
                     );
 
                     /// <summary>
-                    /// Teleports to player
-                    /// </summary>
-                    CustomSubMenu.AddSubMenu("Teleport to", () =>
-                    {
-                        var allPlayers = Utils.Players.getAllPlayers();
-                        foreach (var player in allPlayers)
-                        {
-                            CustomSubMenu.AddSubMenu(
-                                player.field_Private_APIUser_0.displayName,
-                                () =>
-                                {
-                                    CustomSubMenu.AddButton(
-                                        $"TP to: {player.field_Private_APIUser_0.displayName}",
-                                        () => teleportHandler.TeleportTo(player),
-                                        null, 
-                                        !MultiActionSettings.IsModEnabled()
-                                    );
-                                },
-                                null,
-                                !MultiActionSettings.IsModEnabled()
-                            );
-                        }
-                    }, null, !MultiActionSettings.IsModEnabled());
-
-                    /// <summary>
                     /// Opens different menus for local player
                     /// </summary>
                     CustomSubMenu.AddSubMenu("Open", () => 
@@ -178,73 +153,102 @@ namespace MultiActions
                     // So just ensuring we are not in XRDevice
                     (!MultiActionSettings.IsModEnabled() || !Utils.Extra.isInXR()));
 
-                    /// <summary>
-                    /// Teleporting menu
-                    /// </summary>
-                    CustomSubMenu.AddSubMenu("Teleporting", () =>
+                    // Lets simply not render if we don't want risky functions enabled
+                    if (MultiActionSettings.riskyF.Value)
                     {
 
-                        CustomSubMenu.AddButton("Save position", () =>
+                        /// <summary>
+                        /// Teleports to player
+                        /// </summary>
+                        CustomSubMenu.AddSubMenu("Teleport to", () =>
                         {
-                            var player = Utils.Players.getLocalPlayer();
-                            if (player == null) return;
-
-                            var controller = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<GamelikeInputController>();
-                            controller.enabled = false;
-                            BuiltinUiUtils.ShowInputPopup(
-                                "Save Point Name", 
-                                "", 
-                                InputField.InputType.Standard, 
-                                false, 
-                                "Save", 
-                                (msg, _, _2) =>
-                                {
-                                    controller.enabled = true;
-                                    teleportHandler.AddSavePoint(msg, player.transform.position);
-                                    SavedPointsTeleport.AddItem(
-                                        msg, 
-                                        null,
-                                        () => teleportHandler.TeleportTo(teleportHandler.GetSavePoint(msg))
-                                    );
-                                },
-                                () => controller.enabled = true
-                            );
+                            var allPlayers = Utils.Players.getAllPlayers();
+                            foreach (var player in allPlayers)
+                            {
+                                CustomSubMenu.AddSubMenu(
+                                    player.field_Private_APIUser_0.displayName,
+                                    () =>
+                                    {
+                                        CustomSubMenu.AddButton(
+                                            $"TP to: {player.field_Private_APIUser_0.displayName}",
+                                            () => teleportHandler.TeleportTo(player),
+                                            null, 
+                                            !MultiActionSettings.IsModEnabled()
+                                        );
+                                    },
+                                    null,
+                                    !MultiActionSettings.IsModEnabled()
+                                );
+                            }
                         }, null, !MultiActionSettings.IsModEnabled());
 
-                        CustomSubMenu.AddSubMenu("Saved", () =>
+                        /// <summary>
+                        /// Teleporting menu
+                        /// </summary>
+                        CustomSubMenu.AddSubMenu("Teleporting", () =>
                         {
-                            CustomSubMenu.AddButton("Clear all", () =>
+
+                            CustomSubMenu.AddButton("Save position", () =>
                             {
-                                teleportHandler.ClearAllSavePoints();
+                                var player = Utils.Players.getLocalPlayer();
+                                if (player == null) return;
+
+                                var controller = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<GamelikeInputController>();
+                                controller.enabled = false;
+                                BuiltinUiUtils.ShowInputPopup(
+                                    "Save Point Name", 
+                                    "", 
+                                    InputField.InputType.Standard, 
+                                    false, 
+                                    "Save", 
+                                    (msg, _, _2) =>
+                                    {
+                                        controller.enabled = true;
+                                        teleportHandler.AddSavePoint(msg, player.transform.position);
+                                        SavedPointsTeleport.AddItem(
+                                            msg, 
+                                            null,
+                                            () => teleportHandler.TeleportTo(teleportHandler.GetSavePoint(msg))
+                                        );
+                                    },
+                                    () => controller.enabled = true
+                                );
                             }, null, !MultiActionSettings.IsModEnabled());
 
-                            // Display all of our saves
-                            var points = teleportHandler.GetSavePoints();
-                            foreach(var point in points)
+                            CustomSubMenu.AddSubMenu("Saved", () =>
                             {
-                                var p = teleportHandler.GetSavePoint(point);
-                                if (p == null) return;
-                                CustomSubMenu.AddSubMenu(point, () =>
+                                CustomSubMenu.AddButton("Clear all", () =>
                                 {
-                                    CustomSubMenu.AddButton("Delete", () =>
+                                    teleportHandler.ClearAllSavePoints();
+                                }, null, !MultiActionSettings.IsModEnabled());
+
+                                // Display all of our saves
+                                var points = teleportHandler.GetSavePoints();
+                                foreach(var point in points)
+                                {
+                                    var p = teleportHandler.GetSavePoint(point);
+                                    if (p == null) return;
+                                    CustomSubMenu.AddSubMenu(point, () =>
                                     {
-                                        teleportHandler.RemoveSavePoint(point);
+                                        CustomSubMenu.AddButton("Delete", () =>
+                                        {
+                                            teleportHandler.RemoveSavePoint(point);
+                                        });
+                                        CustomSubMenu.AddButton("Teleport", () =>
+                                        {
+                                            // Teleport player to p
+                                            var player = Utils.Players.getLocalPlayer();
+                                            if (player == null) return;
+                                            teleportHandler.TeleportTo(p);
+                                        }, null, !MultiActionSettings.IsModEnabled());
                                     });
-                                    CustomSubMenu.AddButton("Teleport", () =>
-                                    {
-                                        // Teleport player to p
-                                        var player = Utils.Players.getLocalPlayer();
-                                        if (player == null) return;
-                                        teleportHandler.TeleportTo(p);
-                                    }, null, !MultiActionSettings.IsModEnabled());
-                                });
-                            }
-                        });
+                                }
+                            });
 
+                        }, null, !MultiActionSettings.IsModEnabled());
 
-                    }, null, !MultiActionSettings.IsModEnabled());
-
-
+                    }
+                    
                 }, null, !MultiActionSettings.IsModEnabled());
         }
 
@@ -253,6 +257,8 @@ namespace MultiActions
         {
             while (GameObject.Find("UserInterface").GetComponentInChildren<VRC.UI.Elements.QuickMenu>(true) == null)
                 yield return null;
+
+            // TODO: Find a solution to disable if we don't have risky function on.
 
             var TeleportsTab = new ReCategoryPage("Teleports", true);
             ReTabButton.Create("Teleports", "Open Teleports", "Teleports", null);

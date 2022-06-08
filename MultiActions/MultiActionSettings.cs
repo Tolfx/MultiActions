@@ -10,6 +10,11 @@ namespace MultiActions
         internal static MelonPreferences_Entry<bool> quitButton;
         internal static MelonPreferences_Entry<bool> respawnButton;
 
+        /// <summary>
+        /// Enable risky functions
+        /// </summary>
+        internal static MelonPreferences_Entry<bool> riskyF;
+
         public static void RegisterSettings()
         {
             var category = MelonPreferences.CreateCategory(ModName, ModName);
@@ -17,6 +22,7 @@ namespace MultiActions
             enable = category.CreateEntry("Enable", true, "Enable mod");
             quitButton = category.CreateEntry("Quit Button", false, "Enable quit button");
             respawnButton = category.CreateEntry("Respawn Button", false, "Enable respawn button");
+            riskyF = category.CreateEntry("Risky Functions", false, "Enable risky functions");
         }
 
         public static bool IsModEnabled()
