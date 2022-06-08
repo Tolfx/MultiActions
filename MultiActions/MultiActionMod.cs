@@ -16,9 +16,35 @@ using UnityEngine;
 using UnityEngine.UI;
 using MultiActions.Utils;
 using UIExpansionKit.API;
+using System.Reflection;
+using HarmonyLib;
 
 namespace MultiActions
 {
+
+    [HarmonyPatch]
+    class RoomManagerPatches
+    {
+        static IEnumerable<MethodBase> TargetMethods()
+        {
+            return typeof(RoomManager).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(x =>
+                    x.Name.Contains("Method_Public_Static_Boolean_ApiWorld_ApiWorldInstance_") &&
+                    !x.Name.Contains("PDM"))
+                .Cast<MethodBase>();
+        }
+ 
+        static void Postfix(ApiWorld __0, ApiWorldInstance __1, ref bool __result)
+        {
+            if (__result)
+            {
+                if (__1 != null)
+                {
+                    MultiActionsMod.JoinRoomPatch(__0, __1, __result);
+                }
+            }
+        }
+    }
+
     public class MultiActionsMod : MelonMod
     {
         public bool isReady = false;
@@ -33,8 +59,25 @@ namespace MultiActions
             SetupActionsButtons();
         }
 
+        public static void JoinRoomPatch(ApiWorld __0, ApiWorldInstance __1, bool __result)
+        {
+            MelonLogger.Msg("Joined a new room.. checking tags");
+            var tags = RoomManager.field_Internal_Static_ApiWorld_0.tags;
+            // Check if the tags has author_tag_game or author_tag_club
+            var hasTags = tags.Contains("author_tag_game") || tags.Contains("author_tag_club");
+            // If we are in a world with tags, we will check if we are allowed to use risky functions
+            if (!hasTags)
+            {
+                MultiActionSettings.areWeAllowedToUseRiskyFunctions = true;
+            }
+            else
+            {
+                // We are not in a world with tags, so we will disable the risky functions
+                MultiActionSettings.areWeAllowedToUseRiskyFunctions = false;
+            }
+        }
 
-        public bool hasAllRequirements()
+        public bool hasAllRequirements(bool log = true)
         {
             // Check if we have the following:
             // - ReMod.Core
@@ -55,10 +98,13 @@ namespace MultiActions
             var uiExpansionKitPath = Path.Combine(path, "Mods", "UIExpansionKit.dll");
             var actionMenuApiPath = Path.Combine(path, "Mods", "ActionMenuApi.dll");
 
-            MelonLogger.Msg("Checking if we have all the required mods...");
-            MelonLogger.Msg($"ReMod.Core: {File.Exists(reModCorePath) || File.Exists(reModCorePath2)}");
-            MelonLogger.Msg($"UiExpansionKit: {File.Exists(uiExpansionKitPath)}");
-            MelonLogger.Msg($"ActionMenuApi: {File.Exists(actionMenuApiPath)}");
+            if (log)
+            {
+                MelonLogger.Msg("Checking if we have all the required mods...");
+                MelonLogger.Msg($"ReMod.Core: {File.Exists(reModCorePath) || File.Exists(reModCorePath2)}");
+                MelonLogger.Msg($"UiExpansionKit: {File.Exists(uiExpansionKitPath)}");
+                MelonLogger.Msg($"ActionMenuApi: {File.Exists(actionMenuApiPath)}");
+            }
 
             bool hasAll = (File.Exists(reModCorePath) || File.Exists(reModCorePath2)) && File.Exists(uiExpansionKitPath) && File.Exists(actionMenuApiPath);
             
@@ -70,7 +116,8 @@ namespace MultiActions
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            if(!hasAllRequirements()) return;
+            if(!hasAllRequirements(false)) return;
+
             if (_scenesLoaded <= 2)
             {
                 _scenesLoaded++;
@@ -154,13 +201,9 @@ namespace MultiActions
                     // So just ensuring we are not in XRDevice
                     (!MultiActionSettings.IsModEnabled() || !Utils.Extra.isInXR()));
 
-                    var tags = RoomManager.field_Internal_Static_ApiWorld_0.tags;
-                    // Check if the tags has author_tag_game or author_tag_club
-                    var hasTags = tags.Contains("author_tag_game") || tags.Contains("author_tag_club");
-
                     // To the guidelines of VRCMG you need to check allowed or not.
                     // Lets simply not render if we don't want risky functions enabled
-                    if (MultiActionSettings.riskyF.Value && !hasTags)
+                    if (MultiActionSettings.riskyF.Value && MultiActionSettings.allowedForRisky())
                     {
 
                         /// <summary>

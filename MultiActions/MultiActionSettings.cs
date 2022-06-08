@@ -14,6 +14,15 @@ namespace MultiActions
         /// Enable risky functions
         /// </summary>
         internal static MelonPreferences_Entry<bool> riskyF;
+        /// <summary>
+        /// We will use this bool when checking we are allowed in the current world/club
+        /// </summary>
+        internal static bool areWeAllowedToUseRiskyFunctions = true;
+
+        internal static bool allowedForRisky()
+        {
+            return areWeAllowedToUseRiskyFunctions;
+        }
 
         public static void RegisterSettings()
         {
