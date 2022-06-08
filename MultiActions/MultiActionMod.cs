@@ -221,6 +221,21 @@ namespace MultiActions
             ReTabButton.Create("Teleports", "Open Teleports", "Teleports", null);
             var TeleportsConfig = TeleportsTab.AddCategory("Teleports Config");
             SavedPointsTeleport = new ReRadioTogglePage("Saved points");
+            SavedPointsTeleport.OnClose += () =>
+            {
+                SavedPointsTeleport.ClearItems();
+                var points = teleportHandler.GetSavePoints();
+                foreach (var point in points)
+                {
+                    var p = teleportHandler.GetSavePoint(point);
+                    if (p == null) return;
+                    SavedPointsTeleport.AddItem(
+                        point,
+                        null,
+                        () => teleportHandler.TeleportTo(p)
+                    );
+                }
+            };
             TeleportsConfig.AddButton("Saved points", "Open to see all saved points", SavedPointsTeleport.Open);
         }
     }
