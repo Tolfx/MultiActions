@@ -33,6 +33,7 @@ namespace MultiActions
             SetupActionsButtons();
         }
 
+
         public bool hasAllRequirements()
         {
             // Check if we have the following:
@@ -153,8 +154,13 @@ namespace MultiActions
                     // So just ensuring we are not in XRDevice
                     (!MultiActionSettings.IsModEnabled() || !Utils.Extra.isInXR()));
 
+                    var tags = RoomManager.field_Internal_Static_ApiWorld_0.tags;
+                    // Check if the tags has author_tag_game or author_tag_club
+                    var hasTags = tags.Contains("author_tag_game") || tags.Contains("author_tag_club");
+
+                    // To the guidelines of VRCMG you need to check allowed or not.
                     // Lets simply not render if we don't want risky functions enabled
-                    if (MultiActionSettings.riskyF.Value)
+                    if (MultiActionSettings.riskyF.Value && !hasTags)
                     {
 
                         /// <summary>
