@@ -124,6 +124,8 @@ namespace MultiActions.ActionMenu
                         CustomSubMenu.AddSubMenu("Teleport to", () =>
                         {
                             var allPlayers = Utils.Players.getAllPlayers();
+                            // Filter away localPlayer
+                            allPlayers.Remove(Utils.Players.getLocalPlayer().prop_Player_0);
                             foreach (var player in allPlayers)
                             {
                                 CustomSubMenu.AddSubMenu(
