@@ -32,7 +32,7 @@ namespace MultiActions
             // Otherwise won't this mod work at all.
             if(!hasAllRequirements()) return;
             MultiActionSettings.RegisterSettings();
-            SetupActionsButtons();
+            MaActionsRender.Render();
         }
 
         public static void JoinRoomPatch(ApiWorld __0, ApiWorldInstance __1, bool __result)
@@ -106,12 +106,6 @@ namespace MultiActions
             }
         }
 
-        private void SetupActionsButtons()
-        {
-            MaActionsRender.Render();
-        }
-
-        public static ReRadioTogglePage SavedPointsTeleport;
         public static ReMenuCategory TeleportsCategory;
         public static Dictionary<String, ReMenuButton> SavedPointsButtons = new Dictionary<String, ReMenuButton>();
         public IEnumerator<string> CreateTabMenu()
