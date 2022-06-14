@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -433,6 +433,15 @@
     <Compile Include="Utils\Extra.cs" />
     <Compile Include="Utils\Players.cs" />
     <Compile Include="Utils\Camera.cs" />
+    <Compile Include="Patches\RoomManger.Patching.cs" />
+    <Compile Include="TeleportHandler.cs" />
+    <Compile Include="ActionMenu\Actions.enum.cs" />
+    <Compile Include="ActionMenu\Actions.creator.cs" />
+    <Compile Include="ActionMenu\Actions.render.cs" />
+    <Compile Include="ActionMenu\Actions\Actions.main.cs" />
+    <Compile Include="ActionMenu\Actions\Actions.teleport.cs" />
+    <Compile Include="ActionMenu\Actions\Actions.open.cs" />
+    <Compile Include="ActionMenu\Actions\Actions.teleporting.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
