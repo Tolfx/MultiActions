@@ -41,6 +41,15 @@ namespace MultiActions
             var tags = RoomManager.field_Internal_Static_ApiWorld_0.tags;
             // Check if the tags has author_tag_game or author_tag_club
             var hasTags = tags.Contains("author_tag_game") || tags.Contains("author_tag_club");
+
+            // We have joined a new world.. thus we should clean up our saved points, since
+            // They won't match the new world anymore.
+            foreach (var button in SavedPointsButtons)
+            {
+                button.Value.Destroy();
+            }
+            SavedPointsButtons.Clear();
+
             // If we are in a world with tags, we will check if we are allowed to use risky functions
             if (!hasTags)
             {
