@@ -32,23 +32,24 @@ namespace MultiActions
             // Otherwise won't this mod work at all.
             if(!hasAllRequirements()) return;
             MultiActionSettings.RegisterSettings();
-            MaActionsRender.Init();
             SetupActionsButtons();
         }
 
         public static void JoinRoomPatch(ApiWorld __0, ApiWorldInstance __1, bool __result)
         {
-            MelonLogger.Msg("Joined a new room.. checking tags");
+            MelonLogger.Msg("Joined a new world/club, checking tags.");
             var tags = RoomManager.field_Internal_Static_ApiWorld_0.tags;
             // Check if the tags has author_tag_game or author_tag_club
             var hasTags = tags.Contains("author_tag_game") || tags.Contains("author_tag_club");
             // If we are in a world with tags, we will check if we are allowed to use risky functions
             if (!hasTags)
             {
+                MelonLogger.Msg("The world/club doesn't have tags, allowing risky functions.");
                 MultiActionSettings.areWeAllowedToUseRiskyFunctions = true;
             }
             else
             {
+                MelonLogger.Msg("The world/club has tags, force disabling risky functions.");
                 // We are not in a world with tags, so we will disable the risky functions
                 MultiActionSettings.areWeAllowedToUseRiskyFunctions = false;
             }
@@ -111,31 +112,17 @@ namespace MultiActions
         }
 
         public static ReRadioTogglePage SavedPointsTeleport;
+        public static ReMenuCategory TeleportsCategory;
+        public static Dictionary<String, ReMenuButton> SavedPointsButtons = new Dictionary<String, ReMenuButton>();
         public IEnumerator<string> CreateTabMenu()
         {
             while (GameObject.Find("UserInterface").GetComponentInChildren<VRC.UI.Elements.QuickMenu>(true) == null)
                 yield return null;
 
-            // TODO: Find a solution to disable if we don't have risky function on.
-
             var TeleportsTab = new ReCategoryPage("Teleports", true);
             ReTabButton.Create("Teleports", "Open Teleports", "Teleports", null);
 
-            var TeleportsConfig = TeleportsTab.AddCategory("Teleports Config");
-
-            SavedPointsTeleport = new ReRadioTogglePage("Saved points");
-            TeleportsConfig.AddButton("Saved points", "Open to see all saved points", () =>
-            {
-                SavedPointsTeleport.Open();
-            });
-
-            SavedPointsTeleport.OnSelect += (obj) =>
-            {
-                var p = (Vector3)obj;
-                MelonLogger.Msg(p);
-                TeleportHandler.TeleportTo(p);
-            };
-
+            TeleportsCategory = TeleportsTab.AddCategory("Saved teleports");
         }
     }
 }
